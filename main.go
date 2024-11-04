@@ -1,15 +1,15 @@
 package main
 
 import (
+	"html/template"
 	"net/http"
-	"strconv"
 
 	qrcode "github.com/skip2/go-qrcode"
 )
 
 func handleRequest(writer http.ResponseWriter, request *http.Request) {
 	request.ParseMultipartForm(10 << 20)
-	var size, content = request.FormValue("size"), request.FormValue("content")
+	var content = request.FormValue("content")
 	var codeData []byte
 
 	writer.Header().Set("Content-Type", "application/json")
@@ -19,16 +19,8 @@ func handleRequest(writer http.ResponseWriter, request *http.Request) {
 		writer.Write([]byte(`{"message": "content is required"}`))
 		return
 	}
-
-	qrCodeSize, err := strconv.Atoi(size)
-	if err != nil {
-		writer.WriteHeader(http.StatusBadRequest)
-		writer.Write([]byte(`{"message": "size is required"}`))
-		return
-	}
-
-	qrCode := simpleQRCode{Content: content, Size: qrCodeSize}
-	codeData, err = qrCode.Generate()
+	qrCode := simpleQRCode{Content: content, Size: 256}
+	codeData, err := qrCode.Generate()
 	if err != nil {
 		writer.WriteHeader(http.StatusInternalServerError)
 		writer.Write([]byte(`{"message": "error generating qr code"}`))
@@ -40,7 +32,20 @@ func handleRequest(writer http.ResponseWriter, request *http.Request) {
 	writer.Write(codeData)
 
 }
+
+func handleHome(writer http.ResponseWriter, request *http.Request) {
+	// Carrega o template HTML
+	tmpl, err := template.ParseFiles("./public/index.html")
+	if err != nil {
+		http.Error(writer, "Could not load HTML template", http.StatusInternalServerError)
+		return
+	}
+	// Renderiza o template para o ResponseWriter
+	tmpl.Execute(writer, nil)
+}
 func main() {
+	http.HandleFunc("/", handleHome)
+
 	http.HandleFunc("/generate", handleRequest)
 	http.ListenAndServe(":8080", nil)
 }

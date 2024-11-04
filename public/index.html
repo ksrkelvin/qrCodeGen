@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f5f5f5;
+        }
+        .container {
+            width: 300px;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            text-align: center;
+        }
+        .container input,
+        .container button {
+            width: 70%;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 16px;
+        }
+        img {
+            margin-top: 20px;
+            max-width: 100%;
+            height: auto;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>QR Code Generator</h2>
+        <input type="text" id="content" placeholder="Enter content" required>
+        <button onclick="generateQRCode()">Generate QR Code</button>
+        <img id="qrCodeImage" alt="QR Code Image">
+    </div>
+
+    <script>
+        async function generateQRCode() {
+            const content = document.getElementById('content').value;
+            const qrCodeImage = document.getElementById('qrCodeImage');
+
+            if (!content) {
+                alert('Both content are required!');
+                return;
+            }
+
+            try {
+                const response = await fetch('/generate', {
+                    method: 'POST',
+                    body: new URLSearchParams({ content })
+                });
+
+                if (response.ok) {
+                    const blob = await response.blob();
+                    qrCodeImage.src = URL.createObjectURL(blob);
+                    qrCodeImage.style.display = 'block';
+                } else {
+                    const errorData = await response.json();
+                    alert(errorData.message);
+                }
+            } catch (error) {
+                alert('Failed to generate QR code.');
+                console.error('Error:', error);
+            }
+        }
+    </script>
+</body>
+</html>
