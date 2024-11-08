@@ -10,36 +10,35 @@ on:
 
 
 jobs:
-  continuos_integration:
-    deploy:
-      name: Setup GCP Account
-      runs-on: ubuntu-latest
-      environment: gcp-prod
-      env:
-        IMG_NAME: "gcr.io/${{ secrets.GCP_PROJECT_ID}}/qrgen:latest"
-      steps:
-       #Git checkout
-        - name: Checkout repository
-          uses: actions/checkout@v2
+  deploy:
+    name: Setup GCP Account
+    runs-on: ubuntu-latest
+    environment: gcp-prod
+    env:
+      IMG_NAME: "gcr.io/${{ secrets.GCP_PROJECT_ID}}/qrgen:latest"
+    steps:
+     #Git checkout
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-      #Login GCP
-        - uses: google-github-actions/setup-gcloud@master
-          with:
-            project_id: ${{ secrets.GCP_PROJECT_ID }}
-            service_account_key: ${{ secrets.GCP_SA_KEY }}
+    #Login GCP
+      - uses: google-github-actions/setup-gcloud@master
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
 
-      #Congifure docker
-        - name: Configure Docker
-          run: gcloud auth configure-docker --quiet
+    #Congifure docker
+      - name: Configure Docker
+        run: gcloud auth configure-docker --quiet
 
-      #Build Image
-        - name: Build Docker Image
-          run: docker build -t $IMG_NAME .
+    #Build Image
+      - name: Build Docker Image
+        run: docker build -t $IMG_NAME .
 
-      #Push Image
-        - name: Push Docker Image
-          run: docker push $IMG_NAME
+    #Push Image
+      - name: Push Docker Image
+        run: docker push $IMG_NAME
 
-      #Deploy Image
-        - name: Deploy Docker Image
-          run: gcloud run deploy qrgen --image $IMG_NAME --region us-central1 --memory 128Mi --min-instances 0 --max-instances 1 --platform managed --port 8080 --allow-unauthenticated
+    #Deploy Image
+      - name: Deploy Docker Image
+        run: gcloud run deploy qrgen --image $IMG_NAME --region us-central1 --memory 128Mi --min-instances 0 --max-instances 1 --platform managed --port 8080 --allow-unauthenticated
