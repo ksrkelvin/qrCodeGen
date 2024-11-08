@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: gcp-prod
     env:
-      IMG_NAME: "gcr.io/${{ secrets.GCP_PROJECT_ID}}/qrgen:latest"
+      IMG_NAME: "gcr.io/${{ secrets.GCP_PROJECT_ID }}/qrgen:latest"
     steps:
      #Git checkout
       - name: Checkout repository
