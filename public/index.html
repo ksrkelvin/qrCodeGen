@@ -14,26 +14,88 @@
             margin: 0;
             background-color: #f5f5f5;
         }
+
         .container {
-            width: 300px;
+            width: 100%;
+            max-width: 350px;
             padding: 20px;
             background-color: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
             text-align: center;
+            box-sizing: border-box;
         }
+
+        h2 {
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: #333;
+        }
+
         .container input,
-        .container button {
-            width: 70%;
-            padding: 10px;
+        .container button,
+        .container select,
+        .container input[type="file"] {
+            width: 100%;
+            padding: 12px;
             margin: 10px 0;
             font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
         }
+
+        .container button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .container button:hover {
+            background-color: #45a049;
+        }
+
+        label {
+            font-size: 16px;
+            color: #333;
+        }
+
         img {
             margin-top: 20px;
             max-width: 100%;
             height: auto;
             display: none;
+        }
+
+        .checkbox-container {
+            text-align: left;
+            margin: 10px 0;
+        }
+
+        .checkbox-container input {
+            margin-right: 10px;
+        }
+
+        #watermarkDiv {
+            margin-top: 10px;
+        }
+
+        /* Responsividade */
+        @media (max-width: 400px) {
+            .container {
+                width: 90%;
+            }
+
+            .container input,
+            .container button {
+                font-size: 14px;
+            }
+
+            h2 {
+                font-size: 20px;
+            }
         }
     </style>
 </head>
@@ -41,24 +103,57 @@
     <div class="container">
         <h2>QR Code Generator</h2>
         <input type="text" id="content" placeholder="Enter content" required>
+        
+        <label>
+            <input type="checkbox" id="watermarkCheckbox" onclick="toggleWatermarkInput()"> Add Watermark
+        </label>
+        
+        <div id="watermarkDiv" style="display: none;">
+            <label for="watermarkFile">Choose watermark image:</label>
+            <input type="file" id="watermarkFile" accept="image/*">
+        </div>
+
         <button onclick="generateQRCode()">Generate QR Code</button>
         <img id="qrCodeImage" alt="QR Code Image">
     </div>
 
     <script>
+        function toggleWatermarkInput() {
+            const watermarkDiv = document.getElementById('watermarkDiv');
+            // Toggle the visibility of the watermark input based on the checkbox
+            if (document.getElementById('watermarkCheckbox').checked) {
+                watermarkDiv.style.display = 'block';
+            } else {
+                watermarkDiv.style.display = 'none';
+            }
+        }
+
+        var path = "/generate"
+
         async function generateQRCode() {
             const content = document.getElementById('content').value;
             const qrCodeImage = document.getElementById('qrCodeImage');
+            const watermarkCheckbox = document.getElementById('watermarkCheckbox');
+            const watermarkFile = document.getElementById('watermarkFile').files[0];
+            const formData = new FormData();
 
             if (!content) {
-                alert('Both content are required!');
+                alert('Content is required!');
                 return;
             }
 
+            formData.append('content', content);
+
+            if (watermarkCheckbox.checked && watermarkFile) {
+                formData.append('watermark', watermarkFile);
+                path = "generateWM"
+            }
+
             try {
-                const response = await fetch('/generate', {
+                
+                const response = await fetch(path, {
                     method: 'POST',
-                    body: new URLSearchParams({ content })
+                    body: formData
                 });
 
                 if (response.ok) {
