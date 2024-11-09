@@ -3,6 +3,8 @@ package qrgen
 import (
 	"bytes"
 	"fmt"
+	"image"
+	"image/color"
 	"image/png"
 	"io"
 	"mime/multipart"
@@ -20,16 +22,40 @@ func UploadFile(file multipart.File) ([]byte, error) {
 	return buf.Bytes(), nil
 }
 
-// ResizeWatermark is a function that resizes a watermark
-func ResizeWatermark(watermark io.Reader, width uint) ([]byte, error) {
-	decodedImage, err := png.Decode(watermark)
+// ResizeWatermark redimensiona a marca d'água para o tamanho adequado
+func ResizeWatermark(watermarkData *bytes.Reader, width uint) ([]byte, error) {
+	watermarkImage, _, err := image.Decode(watermarkData)
 	if err != nil {
 		return nil, fmt.Errorf("could not decode watermark image: %v", err)
 	}
 
-	m := resize.Resize(width, 0, decodedImage, resize.Lanczos3)
-	resized := bytes.NewBuffer(nil)
-	png.Encode(resized, m)
+	// Redimensiona a marca d'água
+	resizedWatermark := resize.Resize(width, 0, watermarkImage, resize.Lanczos3)
 
-	return resized.Bytes(), nil
+	// Converte a imagem redimensionada para PNG
+	var buf bytes.Buffer
+	if err := png.Encode(&buf, resizedWatermark); err != nil {
+		return nil, fmt.Errorf("could not encode resized watermark: %v", err)
+	}
+
+	return buf.Bytes(), nil
+}
+
+// applyWatermarkOpacity aplica a opacidade na marca d'água
+func applyWatermarkOpacity(watermark image.Image, opacity float64) image.Image {
+	bounds := watermark.Bounds()
+	rgba := image.NewRGBA(bounds)
+	for y := bounds.Min.Y; y < bounds.Max.Y; y++ {
+		for x := bounds.Min.X; x < bounds.Max.X; x++ {
+			oldColor := watermark.At(x, y)
+			r, g, b, a := oldColor.RGBA()
+			rgba.Set(x, y, color.RGBA{
+				R: uint8(r >> 8),
+				G: uint8(g >> 8),
+				B: uint8(b >> 8),
+				A: uint8(float64(a>>8) * opacity), // Aplica a opacidade
+			})
+		}
+	}
+	return rgba
 }

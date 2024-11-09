@@ -23,15 +23,17 @@ func (code *SimpleQRCode) GenerateWithWatermark(watermark []byte) ([]byte, error
 	return qrCode, nil
 }
 
-// addWatermark adds a watermark to a QR code
+// addWatermark adiciona a marca d'água ao QR code
 func (code *SimpleQRCode) addWatermark(qrCode []byte, watermarkData []byte) ([]byte, error) {
+	// Decodifica o QR code gerado
 	qrCodeData, err := png.Decode(bytes.NewBuffer(qrCode))
 	if err != nil {
 		return nil, fmt.Errorf("could not decode QR code: %v", err)
 	}
 
-	watermarkWidth := uint(float64(qrCodeData.Bounds().Dx()) * 0.25)
-	watermark, err := ResizeWatermark(bytes.NewBuffer(watermarkData), watermarkWidth)
+	// Redimensiona a marca d'água
+	watermarkWidth := uint(float64(qrCodeData.Bounds().Dx()) * 0.2) // Marca d'água com 20% da largura do QR code
+	watermark, err := ResizeWatermark(bytes.NewReader(watermarkData), watermarkWidth)
 	if err != nil {
 		return nil, fmt.Errorf("could not resize the watermark image: %v", err)
 	}
@@ -41,24 +43,30 @@ func (code *SimpleQRCode) addWatermark(qrCode []byte, watermarkData []byte) ([]b
 		return nil, fmt.Errorf("could not decode watermark: %v", err)
 	}
 
-	var halfQrCodeWidth, halfWatermarkWidth int = qrCodeData.Bounds().Dx() / 2, watermarkImage.Bounds().Dx() / 2
-	offset := image.Pt(
-		halfQrCodeWidth-halfWatermarkWidth,
-		halfQrCodeWidth-halfWatermarkWidth,
-	)
+	// Calcula o ponto de centralização da marca d'água
+	qrCodeBounds := qrCodeData.Bounds()
+	watermarkBounds := watermarkImage.Bounds()
+	watermarkX := (qrCodeBounds.Dx() - watermarkBounds.Dx()) / 2
+	watermarkY := (qrCodeBounds.Dy() - watermarkBounds.Dy()) / 2
+	watermarkOffset := image.Pt(watermarkX, watermarkY)
 
-	watermarkImageBounds := qrCodeData.Bounds()
-	m := image.NewRGBA(watermarkImageBounds)
+	// Cria uma nova imagem para o QR code com a marca d'água
+	m := image.NewRGBA(qrCodeBounds)
 
-	draw.Draw(m, watermarkImageBounds, qrCodeData, image.Point{}, draw.Src)
+	// Desenha o QR code primeiro
+	draw.Draw(m, qrCodeBounds, qrCodeData, image.Point{}, draw.Src)
+
+	// Aplica a marca d'água com opacidade
+	watermarkWithOpacity := applyWatermarkOpacity(watermarkImage, 8) // 20% de opacidade
 	draw.Draw(
 		m,
-		watermarkImage.Bounds().Add(offset),
-		watermarkImage,
+		watermarkWithOpacity.Bounds().Add(watermarkOffset),
+		watermarkWithOpacity,
 		image.Point{},
 		draw.Over,
 	)
 
+	// Cria o QR code final com a marca d'água
 	watermarkedQRCode := bytes.NewBuffer(nil)
 	png.Encode(watermarkedQRCode, m)
 
