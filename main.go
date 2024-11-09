@@ -11,6 +11,7 @@ func main() {
 
 	http.HandleFunc("/generate", handlefuncs.HandleQR)
 	http.HandleFunc("/generateWM", handlefuncs.HandleQRWM)
+	http.HandleFunc("/preference", handlefuncs.HandlePreference)
 	http.ListenAndServe(":8080", nil)
 	fmt.Println("Server started on port 8080")
 }

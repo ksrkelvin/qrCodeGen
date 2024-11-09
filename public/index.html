@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QR Code Generator</title>
+
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -17,13 +19,14 @@
 
         .container {
             width: 100%;
-            max-width: 350px;
+            max-width: 400px;
             padding: 20px;
             background-color: #fff;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
             text-align: center;
             box-sizing: border-box;
+            overflow: hidden;
         }
 
         h2 {
@@ -82,10 +85,30 @@
             margin-top: 10px;
         }
 
+        #paymentBrick_container {
+            width: 100%;
+            height: auto;
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 8px;
+            box-sizing: border-box;
+            overflow-y: auto;
+            /* Permite rolagem se necessário */
+            opacity: 1;
+            transition: opacity 0.5s ease-out;
+            /* Animação de opacidade */
+        }
+
+        #paymentBrick_container.hidden {
+            opacity: 0;
+            /* Torna o bloco invisível */
+        }
+
         /* Responsividade */
-        @media (max-width: 400px) {
+        @media (max-width: 600px) {
             .container {
                 width: 90%;
+                padding: 15px;
             }
 
             .container input,
@@ -99,15 +122,18 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <h2>QR Code Generator</h2>
         <input type="text" id="content" placeholder="Enter content" required>
-        
+
         <label>
-            <input type="checkbox" id="watermarkCheckbox" onclick="toggleWatermarkInput()"> Add Watermark
+            <h2> Pay R$1,00 for watermark</h2>
         </label>
-        
+
+        <div id="wallet_container"></div>
+
         <div id="watermarkDiv" style="display: none;">
             <label for="watermarkFile">Choose watermark image:</label>
             <input type="file" id="watermarkFile" accept="image/*">
@@ -117,18 +143,38 @@
         <img id="qrCodeImage" alt="QR Code Image">
     </div>
 
-    <script>
-        function toggleWatermarkInput() {
-            const watermarkDiv = document.getElementById('watermarkDiv');
-            // Toggle the visibility of the watermark input based on the checkbox
-            if (document.getElementById('watermarkCheckbox').checked) {
-                watermarkDiv.style.display = 'block';
-            } else {
-                watermarkDiv.style.display = 'none';
-            }
-        }
+    <!-- Script Mercado Pago -->
+    <script src="https://sdk.mercadopago.com/js/v2"></script>
 
-        var path = "/generate"
+    <script>
+        var paymentStatus = false;
+        const mp = new MercadoPago("{{.MP_PUBLIC_KEY}}");
+        const bricksBuilder = mp.bricks();
+
+        const stsPath = window.location.pathname;
+        const queryParams = new URLSearchParams(window.location.search);
+        paymentId = queryParams.get('payment_id');
+        console.log(stsPath);
+        console.log(paymentId);
+
+        if (stsPath != "/success" && paymentId == null) {
+            fetch('/preference', { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    mp.bricks().create("wallet", "wallet_container", {
+                        initialization: {
+                            preferenceId: data.id,
+                        },
+                        customization: {
+                            texts: {
+                                valueProp: 'smart_option',
+                            },
+                        },
+                    });
+                });
+        } else {
+            document.getElementById('watermarkDiv').style.display = 'block';
+        }
 
         async function generateQRCode() {
             const content = document.getElementById('content').value;
@@ -144,13 +190,17 @@
 
             formData.append('content', content);
 
-            if (watermarkCheckbox.checked && watermarkFile) {
+
+            if (!watermarkFile) {
+                alert('Select a watermark file.');
+                return;
+            } else {
                 formData.append('watermark', watermarkFile);
-                path = "generateWM"
+                path = "generateWM";
             }
 
+
             try {
-                
                 const response = await fetch(path, {
                     method: 'POST',
                     body: formData
@@ -169,6 +219,8 @@
                 console.error('Error:', error);
             }
         }
+
     </script>
 </body>
+
 </html>
