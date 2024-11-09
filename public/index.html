@@ -154,8 +154,7 @@
         const stsPath = window.location.pathname;
         const queryParams = new URLSearchParams(window.location.search);
         paymentId = queryParams.get('payment_id');
-        console.log(stsPath);
-        console.log(paymentId);
+
 
         if (stsPath != "/success" && paymentId == null) {
             fetch('/preference', { method: 'POST' })
