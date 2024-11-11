@@ -147,7 +147,7 @@
     <script src="https://sdk.mercadopago.com/js/v2"></script>
 
     <script>
-        var paymentStatus = false;
+
         const mp = new MercadoPago("{{.MP_PUBLIC_KEY}}");
         const bricksBuilder = mp.bricks();
 
@@ -156,11 +156,27 @@
         paymentId = queryParams.get('payment_id');
         externalReference = queryParams.get('external_reference');
 
-        const mpExternalReference = "{{.MP_EXTERNAL_REFERENCE}}";
-
-        if(stsPath == "/success" && externalReference ==  mpExternalReference && paymentId != null ){ 
-            document.getElementById('watermarkDiv').style.display = 'block';
-        } else {  
+        if (stsPath == "/success" && paymentId != null) {
+            fetch('/check_payment', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    externalReference: externalReference,
+                }),
+            })
+                .then(response => response.json())
+                .then(checkData => {
+                    if (checkData.status == 'approved') {
+                        document.getElementById('watermarkDiv').style.display = 'block';
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro ao verificar o pagamento:', error);
+                });
+            
+        } else {
             fetch('/preference', { method: 'POST' })
                 .then(response => response.json())
                 .then(data => {
