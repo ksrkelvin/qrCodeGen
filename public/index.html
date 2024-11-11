@@ -194,6 +194,7 @@
         }
 
         async function generateQRCode() {
+            var path = "generate";
             const content = document.getElementById('content').value;
             const qrCodeImage = document.getElementById('qrCodeImage');
             const watermarkCheckbox = document.getElementById('watermarkCheckbox');
@@ -208,14 +209,10 @@
             formData.append('content', content);
 
 
-            if (!watermarkFile) {
-                alert('Select a watermark file.');
-                return;
-            } else {
+            if (watermarkFile)  {
                 formData.append('watermark', watermarkFile);
                 path = "generateWM";
             }
-
 
             try {
                 const response = await fetch(path, {
