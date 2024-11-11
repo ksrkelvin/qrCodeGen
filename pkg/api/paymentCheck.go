@@ -17,19 +17,18 @@ type CheckPaymentRequest struct {
 func (p *DiinoAPI) PaymentCheck(c *gin.Context) {
 
 	var checkRequest CheckPaymentRequest
-	err := json.NewDecoder(request.Body).Decode(&checkRequest)
+	err := json.NewDecoder(c.Request.Body).Decode(&checkRequest)
 	if err != nil {
-		http.Error(writer, "Invalid request payload", http.StatusBadRequest)
+		c.String(http.StatusBadRequest, "Invalid request payload")
 		return
 	}
 
 	// Comparação com a variável de ambiente
 	secretKey := os.Getenv("MP_EXTERNAL_REFERENCE")
 	if checkRequest.ExternalReference == secretKey {
-		writer.WriteHeader(http.StatusOK)
-		writer.Write([]byte(`{"status": "approved"}`))
+		c.String(http.StatusOK, `{"status": "approved"}`)
 	} else {
-		http.Error(writer, "Payment verification failed", http.StatusForbidden)
+		c.String(http.StatusForbidden, "Payment verification failed")
 	}
 	return
 

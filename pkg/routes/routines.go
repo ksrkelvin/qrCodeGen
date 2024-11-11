@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"qrCodeGen/internal/api"
+	"qrCodeGen/pkg/api"
 
 	"github.com/gin-gonic/gin"
 )
@@ -15,7 +15,7 @@ func Router(app *gin.Engine, diinoAPI *api.DiinoAPI) (err error) {
 	}()
 
 	//Index
-	app.GET("/", diinoAPI.Home)
+	app.GET("/", diinoAPI.Index)
 
 	//API
 	api := app.Group("/api")
