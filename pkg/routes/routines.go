@@ -16,6 +16,7 @@ func Router(app *gin.Engine, diinoAPI *api.DiinoAPI) (err error) {
 
 	//Index
 	app.GET("/", diinoAPI.Index)
+	app.GET("/success", diinoAPI.Index)
 
 	//API
 	api := app.Group("/api")
