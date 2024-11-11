@@ -1,14 +1,22 @@
 package api
 
 import (
-	"fmt"
+	"encoding/json"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
-// HandlePaymentConfirm is a function that handles the Payment confirmation
+// PaymentConfirm is a function that handles the Payment confirmation
 func (p *DiinoAPI) PaymentConfirm(c *gin.Context) {
-	writer.WriteHeader(http.StatusOK)
-	fmt.Println(request)
+	body := c.Request.Body
+
+	bodyRaw, err := json.Marshal(body)
+	if err != nil {
+		c.String(http.StatusBadRequest, "Invalid request payload")
+		return
+
+	}
+
+	c.String(http.StatusOK, string(bodyRaw))
 }
