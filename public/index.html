@@ -157,7 +157,7 @@
         externalReference = queryParams.get('external_reference');
 
         if (stsPath == "/success" && paymentId != null) {
-            fetch('/api/payment/check_payment', {
+            fetch('/api/payment/check', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
