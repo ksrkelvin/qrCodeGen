@@ -1,1 +1,3 @@
 CORRIGIR BUG DE GENERAT QR SEM WATERMARK
+firewall e black list
+balanceamento de carga

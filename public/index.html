@@ -157,7 +157,7 @@
         externalReference = queryParams.get('external_reference');
 
         if (stsPath == "/success" && paymentId != null) {
-            fetch('/check_payment', {
+            fetch('/api/payment/check_payment', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -177,7 +177,7 @@
                 });
             
         } else {
-            fetch('/preference', { method: 'POST' })
+            fetch('/api/payment/preference', { method: 'POST' })
                 .then(response => response.json())
                 .then(data => {
                     mp.bricks().create("wallet", "wallet_container", {
@@ -215,7 +215,7 @@
             }
 
             try {
-                const response = await fetch(path, {
+                const response = await fetch("/api/"+path, {
                     method: 'POST',
                     body: formData
                 });
