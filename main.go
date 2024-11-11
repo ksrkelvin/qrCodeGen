@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 	"log"
-	"qrCodeGen/internal/api"
-	"qrCodeGen/internal/routes"
+	"qrCodeGen/pkg/api"
+	"qrCodeGen/pkg/routes"
 
 	"github.com/gin-gonic/gin"
 )
@@ -25,6 +25,6 @@ func main() {
 		panic(err)
 	}
 
-	log.Fatal(app.Run(":300"))
+	log.Fatal(app.Run(":8080"))
 
 }
