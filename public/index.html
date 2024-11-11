@@ -154,9 +154,13 @@
         const stsPath = window.location.pathname;
         const queryParams = new URLSearchParams(window.location.search);
         paymentId = queryParams.get('payment_id');
+        externalReference = queryParams.get('external_reference');
 
+        const mpExternalReference = "{{.MP_EXTERNAL_REFERENCE}}";
 
-        if (stsPath != "/success" && paymentId == null) {
+        if(stsPath == "/success" && externalReference ==  mpExternalReference && paymentId != null ){ 
+            document.getElementById('watermarkDiv').style.display = 'block';
+        } else {  
             fetch('/preference', { method: 'POST' })
                 .then(response => response.json())
                 .then(data => {
@@ -171,8 +175,6 @@
                         },
                     });
                 });
-        } else {
-            document.getElementById('watermarkDiv').style.display = 'block';
         }
 
         async function generateQRCode() {

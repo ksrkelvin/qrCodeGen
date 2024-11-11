@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"qrCodeGen/pkg/tools"
 	"text/template"
 )
 
@@ -17,7 +18,8 @@ func HandleHome(writer http.ResponseWriter, request *http.Request) {
 		return
 	}
 	data := map[string]string{
-		"MP_PUBLIC_KEY": os.Getenv("MP_PUBLIC_KEY"),
+		"MP_PUBLIC_KEY":         os.Getenv("MP_PUBLIC_KEY"),
+		"MP_EXTERNAL_REFERENCE": tools.GetSecretKey(),
 	}
 	// Renderiza o template para o ResponseWriter
 	tmpl.Execute(writer, data)

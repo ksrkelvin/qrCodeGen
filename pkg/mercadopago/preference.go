@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"qrCodeGen/pkg/tools"
 
 	"github.com/mercadopago/sdk-go/pkg/config"
 	"github.com/mercadopago/sdk-go/pkg/preference"
@@ -18,7 +19,7 @@ func PreferenceProcess() (data string, err error) {
 	}
 
 	urlApp := os.Getenv("URL_APP")
-	fmt.Println(urlApp)
+	// fmt.Println(urlApp)
 	client := preference.NewClient(cfg)
 
 	request := preference.Request{
@@ -34,7 +35,8 @@ func PreferenceProcess() (data string, err error) {
 			Pending: urlApp + "/pending",
 			Failure: urlApp + "/failure",
 		},
-		AutoReturn: "approved",
+		AutoReturn:        "approved",
+		ExternalReference: tools.GetSecretKey(),
 	}
 
 	resource, err := client.Create(context.Background(), request)
