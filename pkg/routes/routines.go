@@ -14,6 +14,8 @@ func Router(app *gin.Engine, diinoAPI *api.DiinoAPI) (err error) {
 		}
 	}()
 
+	app.Use(diinoAPI.ValidateConnection)
+
 	//Index
 	app.GET("/", diinoAPI.Index)
 	app.GET("/success", diinoAPI.Index)
