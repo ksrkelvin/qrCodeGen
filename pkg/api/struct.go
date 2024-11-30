@@ -2,6 +2,7 @@ package api
 
 import (
 	"fmt"
+	"os"
 
 	diinotools "github.com/ksrkelvin/diinoTools"
 )
@@ -24,6 +25,11 @@ func New() (api *DiinoAPI, err error) {
 		fmt.Println(err)
 		panic(err)
 	}
+
+	mongoURI := os.Getenv("MONGO_URI")
+
+	diino.InitDb(mongoURI, "", "", "", "", "", "")
+	diino.InitSecurity()
 
 	newDiinoAPI := &DiinoAPI{
 		Diino: diino,
