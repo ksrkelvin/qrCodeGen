@@ -11,6 +11,12 @@ func (p *DiinoAPI) ValidateConnection(c *gin.Context) {
 	path := c.Request.URL.Path
 	ip := c.ClientIP()
 
+	if p.Diino.Security.IsBlockedIP(ip) {
+		c.Status(http.StatusNotFound)
+		c.Abort()
+		return
+	}
+
 	err := p.Diino.Security.UpsertPath(path)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"message": "Error validating path"})
@@ -21,7 +27,7 @@ func (p *DiinoAPI) ValidateConnection(c *gin.Context) {
 	if p.Diino.Security.IsProhibitedPath(path) {
 		// Salva o IP na lista negra
 		p.Diino.Security.BlockIP(ip, path)
-		c.JSON(http.StatusNotFound, gin.H{"message": "Not Found!"})
+		c.Status(http.StatusNotFound)
 		c.Abort()
 		return
 	}

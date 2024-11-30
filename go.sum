@@ -77,6 +77,12 @@ github.com/ksrkelvin/diinoTools v0.0.0-20241130162209-46af456b1a18 h1:7Eh83eWwT/
 github.com/ksrkelvin/diinoTools v0.0.0-20241130162209-46af456b1a18/go.mod h1:zL81uL8367ktq1j6kD7e1JLPrlfu4CH8e4hLMYmxJZw=
 github.com/ksrkelvin/diinoTools v0.0.0-20241130162514-30668dae3750 h1:Sxj3HXvXbfq+fldezrSYI8eRDTA5e35r0NnnVGuk8rg=
 github.com/ksrkelvin/diinoTools v0.0.0-20241130162514-30668dae3750/go.mod h1:zL81uL8367ktq1j6kD7e1JLPrlfu4CH8e4hLMYmxJZw=
+github.com/ksrkelvin/diinoTools v0.0.0-20241130164138-2e9d59662e3e h1:XptrghCTxFOPYsCFwULapUH8fvJ6rMLsLjXaJvoF1LE=
+github.com/ksrkelvin/diinoTools v0.0.0-20241130164138-2e9d59662e3e/go.mod h1:zL81uL8367ktq1j6kD7e1JLPrlfu4CH8e4hLMYmxJZw=
+github.com/ksrkelvin/diinoTools v0.0.0-20241130164319-3e9575a017fd h1:JVPXn1zgk18SF59GX02na9N5mcaMIRGRfWjkcbwA+fM=
+github.com/ksrkelvin/diinoTools v0.0.0-20241130164319-3e9575a017fd/go.mod h1:zL81uL8367ktq1j6kD7e1JLPrlfu4CH8e4hLMYmxJZw=
+github.com/ksrkelvin/diinoTools v0.0.0-20241130164846-cd37198a9c1f h1:/ZIf2nhTUK+3SLfz7DaCe0/3G2J34iS+lv+tP9eVJ5Q=
+github.com/ksrkelvin/diinoTools v0.0.0-20241130164846-cd37198a9c1f/go.mod h1:zL81uL8367ktq1j6kD7e1JLPrlfu4CH8e4hLMYmxJZw=
 github.com/leodido/go-urn v1.4.0 h1:WT9HwE9SGECu3lg4d/dIA+jxlljEa1/ffXKmRjqdmIQ=
 github.com/leodido/go-urn v1.4.0/go.mod h1:bvxc+MVxLKB4z00jd1z+Dvzr47oO32F/QSNjSBOlFxI=
 github.com/mattn/go-isatty v0.0.20 h1:xfD0iDuEKnDkl03q4limB+vH+GxLEtL/jb4xVJSWWEY=

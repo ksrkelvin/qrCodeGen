@@ -6,7 +6,7 @@ toolchain go1.22.9
 
 require (
 	github.com/gin-gonic/gin v1.10.0
-	github.com/ksrkelvin/diinoTools v0.0.0-20241130162514-30668dae3750
+	github.com/ksrkelvin/diinoTools v0.0.0-20241130164846-cd37198a9c1f
 	github.com/mercadopago/sdk-go v1.0.6
 	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646
 	github.com/skip2/go-qrcode v0.0.0-20200617195104-da1b6568686e
