@@ -1,0 +1,113 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f5f5f5;
+}
+
+.container {
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    text-align: center;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333;
+}
+
+.container input,
+.container button,
+.container select,
+.container input[type="file"] {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.container button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.container button:hover {
+    background-color: #45a049;
+}
+
+label {
+    font-size: 16px;
+    color: #333;
+}
+
+img {
+    margin-top: 20px;
+    max-width: 100%;
+    height: auto;
+    display: none;
+}
+
+.checkbox-container {
+    text-align: left;
+    margin: 10px 0;
+}
+
+.checkbox-container input {
+    margin-right: 10px;
+}
+
+#watermarkDiv {
+    margin-top: 10px;
+}
+
+#paymentBrick_container {
+    width: 100%;
+    height: auto;
+    margin-top: 20px;
+    padding: 10px;
+    border-radius: 8px;
+    box-sizing: border-box;
+    overflow-y: auto;
+    /* Permite rolagem se necessário */
+    opacity: 1;
+    transition: opacity 0.5s ease-out;
+    /* Animação de opacidade */
+}
+
+#paymentBrick_container.hidden {
+    opacity: 0;
+    /* Torna o bloco invisível */
+}
+
+/* Responsividade */
+@media (max-width: 600px) {
+    .container {
+        width: 90%;
+        padding: 15px;
+    }
+
+    .container input,
+    .container button {
+        font-size: 14px;
+    }
+
+    h2 {
+        font-size: 20px;
+    }
+}

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Generator</title>
+    <link rel="stylesheet" href="./static/styles/style.css">
+    <icon href="./static/assets/favicon.ico" />
+</head>
+
+<body>
+    <div class="container">
+        <h2>QR Code Generator</h2>
+        <input type="text" id="content" placeholder="Enter content" required>
+
+        <label>
+            <h2> Pay R$1,00 for watermark</h2>
+        </label>
+
+        <div id="wallet_container"></div>
+
+        <div id="watermarkDiv" style="display: none;">
+            <label for="watermarkFile">Choose watermark image:</label>
+            <input type="file" id="watermarkFile" accept="image/*">
+        </div>
+
+        <button onclick="generateQRCode()">Generate QR Code</button>
+        <img id="qrCodeImage" alt="QR Code Image">
+    </div>
+
+    <!-- Script Mercado Pago -->
+    <script src="https://sdk.mercadopago.com/js/v2"></script>
+
+    <script src="./static/scripts/script.js"></script>
+</body>
+
+</html>

@@ -18,6 +18,8 @@ func main() {
 	}
 
 	app := gin.Default()
+	app.LoadHTMLGlob("./public/pages/*")
+	app.Static("/static", "./public/static")
 
 	err = routes.Router(app, diinoAPI)
 	if err != nil {
